@@ -65,7 +65,6 @@ object TagsOnlyLocal {
 
   def renderWebsiteLink(
     website: Website,
-    openForOrders: Boolean,
   ): JsDom.TypedTag[Div] =
     div(cls := "call-button")(
       Bulma.Button.basic(
@@ -82,17 +81,12 @@ object TagsOnlyLocal {
       )(
         onclick :=
           s"window.location.href = '${website.url}';",
-        cls := (if (openForOrders && website.name == "Order") // TODO ugh. Stringly typed logic in rendering
-                  "button is-success" // TODO Should only be submitting extra classes to bulma lib, *not* re-writing them here.
-                else
-                  "button"),
       ),
     )
 
   //  <a href="tel:123-456-7890">123-456-7890</a>
   def phoneButton(
     safeRideRecommendation: PhoneNumber,
-    openForOrders: Boolean,
   ): JsDom.TypedTag[Div] =
     div(cls := "call-button")(
       Bulma.Button
@@ -111,10 +105,6 @@ object TagsOnlyLocal {
         .apply(
           onclick :=
             s"window.location.href = 'tel:${safeRideRecommendation.number}';",
-          cls := (if (openForOrders)
-                    "button is-success" // TODO Should only be submitting extra classes to bulma lib, *not* re-writing them here.
-                  else
-                    "button"),
         ),
     )
 
@@ -213,13 +203,11 @@ object TagsOnlyLocal {
     )
 
   def createBusTimeElement(
-    restaurantWithStatus: RestaurantWithStatus,
-    openForOrders: Boolean,
+    restaurantWithStatus: Restaurant,
   ): JsDom.TypedTag[Div] = {
     val externalActions =
       renderExternalActions(
-        restaurantWithStatus.restaurantWithSchedule.externalActions,
-        openForOrders,
+        restaurantWithStatus.externalActions,
       )
     Bulma.collapsedCardWithHeader(
       div(cls := "restaurant-header")(
@@ -228,46 +216,19 @@ object TagsOnlyLocal {
 //            div(location.name + "Open now!")
 //          else
           div(
-            restaurantWithStatus.restaurantWithSchedule.location.humanFriendlyName,
+            restaurantWithStatus.location.humanFriendlyName,
           ),
-        ),
-        div(cls := "restaurant-call")(
-          externalActions.head, // Unsafe
         ),
       ),
       div(
         svgIcon("glyphicons-basic-221-chevron-down.svg"),
       ),
       div(cls := "restaurant-information")(
-        restaurantWithStatus.restaurantWithSchedule.businessDetails
-          .map {
-            case StandardSchedule(deliveryHours, carryOutHours) =>
-              div(cls := "schedule")(
-                div(cls := "pickup-schedule")(
-                  renderPickupSchedule(carryOutHours),
-                ),
-                div(cls := "delivery-schedule")(
-                  renderDeliverySchedule(deliveryHours),
-                ),
-              )
-            case advanceOrdersOnly: AdvanceOrdersOnly =>
-              div(cls := "advance-order-procedure")(
-                "Advance order only: " + advanceOrdersOnly.instructions,
-              )
-            case completelyUnstructedOperation: CompletelyUnstructedOperation =>
-              div(cls := "completely-unstructured-operation")(
-                completelyUnstructedOperation.instructions,
-              )
-          }
-          .getOrElse(
-            div(
-              "Please visit these sites for more detailed information.",
-            ),
-          ),
+        restaurantWithStatus.businessDetails.description,
       ),
-      externalActions.tail,
+      List(),
     )(
-      data("location") := restaurantWithStatus.restaurantWithSchedule.location.elementName,
+      data("location") := restaurantWithStatus.location.elementName,
     )
   }
 
@@ -284,48 +245,39 @@ object TagsOnlyLocal {
   def modalContentElementName(location: Name, routeName: Name) =
     "modal_content_" + routeName.elementName + "_" + location.elementName
 
-  def renderExternalAction(externalAction: ExternalAction,
-                           openForOrders: Boolean) =
+  def renderExternalAction(externalAction: ExternalAction) =
     externalAction match {
       case VisitHomePage(website) =>
-        renderWebsiteLink(website, openForOrders)
+        renderWebsiteLink(website)
       case VisitFacebookPage(website) =>
-        renderWebsiteLink(website, openForOrders)
+        renderWebsiteLink(website)
       case CallLocation(phoneNumber) =>
-        phoneButton(phoneNumber, openForOrders)
+        phoneButton(phoneNumber)
     }
 
   def structuredSetOfUpcomingArrivals(
-    upcomingArrivalInfo: Seq[RestaurantWithStatus],
-    routeName: Name,
+    restaurantGroup: RestaurantGroup,
   ) =
     div(
       div(cls := "route-header")(
         span(cls := "route-header_name")(
-          routeName.humanFriendlyName,
+          restaurantGroup.name.humanFriendlyName,
         ),
       ),
-      upcomingArrivalInfo.map {
-        case restaurantWithStatus: RestaurantWithStatus => {
-          val openForOrders =
-            (restaurantWithStatus.carryOutStatus == Open || restaurantWithStatus.deliveryStatus == Open)
-          TagsOnlyLocal.createBusTimeElement(
-            restaurantWithStatus,
-            openForOrders,
-          )
+      restaurantGroup.allRestaurants.map {
+        case restaurant: Restaurant => {
+          TagsOnlyLocal.createBusTimeElement(restaurant)
         }
       },
     )
 
-  def renderExternalActions(externalActions: ExternalActionCollection,
-                            openForOrders: Boolean,
+  def renderExternalActions(
+    externalActions: ExternalActionCollection,
   ) =
     renderExternalAction(
       externalActions.primary,
-      openForOrders,
     ) +: externalActions.others.map(
-      externalAction =>
-        renderExternalAction(externalAction, openForOrders),
+      externalAction => renderExternalAction(externalAction),
     )
 
   def svgIconForAlarm(name: String,

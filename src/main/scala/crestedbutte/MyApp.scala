@@ -32,7 +32,6 @@ object MyApp extends App {
     for {
       serviceAreaOpt <- QueryParameters.getOptional(
         "route",
-        x => Some(x),
       )
       selectedRestaurantGroup: RestaurantGroup = serviceAreaOpt
         .flatMap(
@@ -60,8 +59,7 @@ object MyApp extends App {
 
   private val restaurantGroups: Seq[RestaurantGroup] =
     Seq(
-      CbRestaurantsAndSchedules,
-      GunnisonRestaurants,
+      SignificantRelationshipMoments,
     )
 
   def deserializeTimeString(rawTime: String): OffsetDateTime =
@@ -82,7 +80,6 @@ object MyApp extends App {
       fixedTime <- QueryParameters.getRequired("time",
                                                deserializeTimeString)
       environmentDependencies = if (fixedTime.isDefined) { // TODO use map instead
-        println("generic queryParam currentTime: " + fixedTime.get)
         new FixedClock.Fixed(
           fixedTime.get.toString,
         ) with Console.Live with BrowserLive
@@ -111,16 +108,10 @@ object MyApp extends App {
     now: Instant,
   ) =
     if (restaurantGroup == currentlySelectedRestaurantGroup) {
-      val restaurantsWithStatus =
-        TimeCalculations.calculateCurrentRestaurantStatus(
-          now,
-          restaurantGroup,
-        )
       DomManipulation.updateRestaurantSectionInsideElement(
         restaurantGroup.componentName,
         TagsOnlyLocal.structuredSetOfUpcomingArrivals(
-          restaurantsWithStatus,
-          restaurantGroup.name,
+          restaurantGroup,
         ),
       )
     } else {
