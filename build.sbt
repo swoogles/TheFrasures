@@ -1,6 +1,6 @@
 //scalaVersion := "2.12.10"
 scalaVersion := "2.13.1"
-version := "0.2"
+version := "0.1"
 
 enablePlugins(ScalaJSPlugin)
 
@@ -14,7 +14,7 @@ resolvers += Resolver.githubPackages("swoogles", "BulmaScala")
 libraryDependencies ++= Seq(
   "com.billding" %%% "bulmalibrary" % "0.2.14",
   "com.billding" %%% "brieftime" % "0.0.6",
-  "com.billding" %%% "scalajsziolibrary" % "0.0.2",
+  "com.billding" %%% "scalajsziolibrary" % "0.0.5",
   "dev.zio" %%% "zio" % "1.0.0-RC17",
   "dev.zio" %%% "zio-streams" % "1.0.0-RC17",
   "com.lihaoyi" %%% "scalatags" % "0.8.6",
@@ -45,11 +45,11 @@ cbBuild := {
   import scala.sys.process._
 //  "ls ./target/scala-2.13" !
   (Process("mkdir ./src/main/resources/compiledJavascript") #||
-    Process("cp ./target/scala-2.13/cb-food-fastopt.js src/main/resources/compiledJavascript/") #&&
-    Process("cp ./target/scala-2.13/cb-food-fastopt.js.map src/main/resources/compiledJavascript/") #&&
+    Process("cp ./target/scala-2.13/wedding-fastopt.js src/main/resources/compiledJavascript/") #&&
+    Process("cp ./target/scala-2.13/wedding-fastopt.js.map src/main/resources/compiledJavascript/") #&&
     Process("cp sw/target/scala-2.12/sw-opt.js src/main/resources/") #&&
     Process("cp sw/target/scala-2.12/sw-opt.js.map src/main/resources/") #&&
-    Process("cp ./target/scala-2.13/cb-food-jsdeps.js src/main/resources/compiledJavascript/"))!
+    Process("cp ./target/scala-2.13/wedding-jsdeps.js src/main/resources/compiledJavascript/"))!
 }
 
 lazy val cbPublish = taskKey[Unit]("Build the files for a real deploment")
@@ -60,8 +60,8 @@ cbPublish := {
   import scala.sys.process._
   //  "ls ./target/scala-2.13" !
   (Process("mkdir ./src/main/resources/compiledJavascript") ###
-    Process("cp ./target/scala-2.13/cb-food-opt.js src/main/resources/compiledJavascript/") ###
-    Process("cp ./target/scala-2.13/cb-food-opt.js.map src/main/resources/compiledJavascript/") ###
+    Process("cp ./target/scala-2.13/wedding-opt.js src/main/resources/compiledJavascript/") ###
+    Process("cp ./target/scala-2.13/wedding-opt.js.map src/main/resources/compiledJavascript/") ###
     Process("cp sw/target/scala-2.12/sw-opt.js src/main/resources/") ###
     Process("cp sw/target/scala-2.12/sw-opt.js.map src/main/resources/"))!
 }
