@@ -23,14 +23,13 @@ object TagsOnlyLocal {
   def overallPageLayout(pageMode: AppMode.Value,
                         restaurantGroups: Seq[RestaurantGroup]) =
     div(id := "container")(
-      // TODO Restore menu once Gunnison is added
       Bulma.menu(
         restaurantGroups.map { restaurantGroup =>
           Bulma.Button.anchor(
             restaurantGroup.name.humanFriendlyName,
           )(data("route") := restaurantGroup.componentName)
         },
-        "Restaurants",
+        "Our Links",
       ),
       restaurantGroups.map(
         restaurantGroup =>
