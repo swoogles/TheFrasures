@@ -3,7 +3,7 @@ package crestedbutte
 import java.time.{Instant, LocalDateTime, ZoneId, ZoneOffset}
 
 import com.billding.time.BusTime
-import crestedbutte.routes.RestaurantGroup
+import crestedbutte.routes.MemoryGroup
 import crestedbutte.time.{
   ClosedForTheDay,
   DailyHours,

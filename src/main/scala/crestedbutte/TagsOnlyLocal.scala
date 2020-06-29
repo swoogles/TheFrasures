@@ -6,7 +6,7 @@ import java.util.Locale
 
 import com.billding.time.BusTime
 import crestedbutte.dom.Bulma
-import crestedbutte.routes.RestaurantGroup
+import crestedbutte.routes.MemoryGroup
 import crestedbutte.time.{
   ClosedForTheDay,
   DailyHours,
@@ -21,7 +21,7 @@ object TagsOnlyLocal {
   import scalatags.JsDom.all._
 
   def overallPageLayout(pageMode: AppMode.Value,
-                        restaurantGroups: Seq[RestaurantGroup]) =
+                        restaurantGroups: Seq[MemoryGroup]) =
     div(id := "container")(
       Bulma.menu(
         restaurantGroups.map { restaurantGroup =>
@@ -202,7 +202,7 @@ object TagsOnlyLocal {
     )
 
   def createBusTimeElement(
-    restaurantWithStatus: Restaurant,
+    restaurantWithStatus: RelationshipMoment,
   ): JsDom.TypedTag[Div] = {
     val externalActions =
       renderExternalActions(
@@ -225,7 +225,7 @@ object TagsOnlyLocal {
       div(cls := "restaurant-information")(
         restaurantWithStatus.businessDetails.description,
       ),
-      List(),
+      externalActions,
     )(
       data("location") := restaurantWithStatus.location.elementName,
     )
@@ -255,7 +255,7 @@ object TagsOnlyLocal {
     }
 
   def structuredSetOfUpcomingArrivals(
-    restaurantGroup: RestaurantGroup,
+    restaurantGroup: MemoryGroup,
   ) =
     div(
       div(cls := "route-header")(
@@ -264,7 +264,7 @@ object TagsOnlyLocal {
         ),
       ),
       restaurantGroup.allRestaurants.map {
-        case restaurant: Restaurant => {
+        case restaurant: RelationshipMoment => {
           TagsOnlyLocal.createBusTimeElement(restaurant)
         }
       },

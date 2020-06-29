@@ -1,6 +1,6 @@
 package crestedbutte
 
-import crestedbutte.routes.RestaurantGroup
+import crestedbutte.routes.MemoryGroup
 import org.scalajs.dom.html.Div
 import org.scalajs.dom.raw.Node
 import scalatags.JsDom
@@ -10,7 +10,7 @@ object DomManipulation {
 
   def createAndApplyPageStructure(
     pageMode: AppMode.Value,
-    restaurantGroups: Seq[RestaurantGroup],
+    restaurantGroups: Seq[MemoryGroup],
   ): ZIO[Browser, Nothing, Node] =
     ZIO
       .environment[Browser]

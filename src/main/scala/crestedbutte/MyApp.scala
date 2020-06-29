@@ -27,13 +27,13 @@ object MyApp extends App {
 
   def loopLogic(
     pageMode: AppMode.Value,
-    restaurantGroups: Seq[RestaurantGroup],
+    restaurantGroups: Seq[MemoryGroup],
   ): ZIO[Browser with Clock with Console, Nothing, Unit] =
     for {
       serviceAreaOpt <- QueryParameters.getOptional(
         "route",
       )
-      selectedRestaurantGroup: RestaurantGroup = serviceAreaOpt
+      selectedRestaurantGroup: MemoryGroup = serviceAreaOpt
         .flatMap(
           serviceAreaParam =>
             restaurantGroups.find(
@@ -57,9 +57,9 @@ object MyApp extends App {
       _ <- UnsafeCallbacks.attachCardClickBehavior
     } yield ()
 
-  private val restaurantGroups: Seq[RestaurantGroup] =
+  private val restaurantGroups: Seq[MemoryGroup] =
     Seq(
-      SignificantRelationshipMoments,
+      RecommendedCharities,
     )
 
   def deserializeTimeString(rawTime: String): OffsetDateTime =
@@ -103,8 +103,8 @@ object MyApp extends App {
     }
 
   def updateCurrentRestaurantInfoInCity(
-    restaurantGroup: RestaurantGroup,
-    currentlySelectedRestaurantGroup: RestaurantGroup,
+    restaurantGroup: MemoryGroup,
+    currentlySelectedRestaurantGroup: MemoryGroup,
     now: Instant,
   ) =
     if (restaurantGroup == currentlySelectedRestaurantGroup) {
@@ -121,8 +121,8 @@ object MyApp extends App {
     }
 
   def updateUpcomingArrivalsOnPage(
-    selectedRestaurantGroup: RestaurantGroup,
-    restaurantGroups: Seq[RestaurantGroup],
+    selectedRestaurantGroup: MemoryGroup,
+    restaurantGroups: Seq[MemoryGroup],
     now: Instant,
   ): ZIO[Browser with Clock with Console, Nothing, Unit] =
     for {

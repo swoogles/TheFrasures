@@ -1,11 +1,11 @@
 package crestedbutte
 
-case class Restaurant(
+case class RelationshipMoment(
   location: Name,
   externalActions: ExternalActionCollection,
   businessDetails: Details,
 )
 
-object Restaurant {}
+object RelationshipMoment {}
 
 case class Details(description: String)

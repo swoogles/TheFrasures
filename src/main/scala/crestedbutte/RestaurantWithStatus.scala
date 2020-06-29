@@ -1,7 +1,7 @@
 package crestedbutte
 
 case class RestaurantWithStatus(
-  restaurantWithSchedule: Restaurant,
+  restaurantWithSchedule: RelationshipMoment,
   carryOutStatus: RestaurantStatus,
   deliveryStatus: RestaurantStatus,
 )

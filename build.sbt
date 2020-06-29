@@ -29,7 +29,6 @@ libraryDependencies ++= Seq(
 //  "io.github.outwatch" %%% "outwatch" % "1.0.0-RC2",
   "com.github.outwatch.outwatch" %%% "outwatch" % "a332851",
   "com.propensive" %%% "contextual" % "1.2.1"
-//  "com.raquo" %%% "laminar" % "0.8.0"   // Scala.js 1.x only
 )
 
 testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework"))
@@ -43,7 +42,6 @@ cbBuild := {
   (Compile/fastOptJS).value
   (Compile/scalafmt).value
   import scala.sys.process._
-//  "ls ./target/scala-2.13" !
   (Process("mkdir ./src/main/resources/compiledJavascript") #||
     Process("cp ./target/scala-2.13/wedding-fastopt.js src/main/resources/compiledJavascript/") #&&
     Process("cp ./target/scala-2.13/wedding-fastopt.js.map src/main/resources/compiledJavascript/") #&&
