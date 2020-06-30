@@ -23,14 +23,15 @@ object TagsOnlyLocal {
   def overallPageLayout(pageMode: AppMode.Value,
                         restaurantGroups: Seq[MemoryGroup]) =
     div(id := "container")(
-      Bulma.menu(
-        restaurantGroups.map { restaurantGroup =>
-          Bulma.Button.anchor(
-            restaurantGroup.name.humanFriendlyName,
-          )(data("route") := restaurantGroup.componentName)
-        },
-        "Our Links",
-      ),
+      // Restore once other non-charity sections are added
+//      Bulma.menu(
+//        restaurantGroups.map { restaurantGroup =>
+//          Bulma.Button.anchor(
+//            restaurantGroup.name.humanFriendlyName,
+//          )(data("route") := restaurantGroup.componentName)
+//        },
+//        "Our Links",
+//      ),
       restaurantGroups.map(
         restaurantGroup =>
           busScheduleDiv(restaurantGroup.componentName),
