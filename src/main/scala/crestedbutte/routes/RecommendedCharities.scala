@@ -13,7 +13,7 @@ import crestedbutte.{
 
 object RecommendedCharities
     extends MemoryGroup(
-      Name("Our recommended charities"),
+      Name("Our Recommended Charities"),
       Seq(
         RelationshipMoment(
           Name("Against Malaria Foundation"),
@@ -50,7 +50,25 @@ object RecommendedCharities
             ),
           ),
           Details(
-            "This is one of the most effective ways to save lives.",
+            "They create localized health media in developing nations.",
+          ),
+        ),
+        RelationshipMoment(
+          Name("Crested Butte Mountain Theater"),
+          ExternalActionCollection(
+            VisitHomePage(
+              Website
+                .donate(
+                  "https://www.cbmountaintheatre.org/donations.html",
+                ),
+            ),
+          ),
+          Details(
+            """On a lighter, closer-to-home note, this is our local community theatre.
+              | Hali has been performing here since middle school, and Bill has been involved since
+              | moving to Crested Butte. They are having a really hard time surviving during
+              | all of the Covid measures.
+              |""".stripMargin,
           ),
         ),
       ),
