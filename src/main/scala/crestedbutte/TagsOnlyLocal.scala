@@ -278,9 +278,7 @@ object TagsOnlyLocal {
   def renderExternalActions(
     externalActions: ExternalActionCollection,
   ) =
-    renderExternalAction(
-      externalActions.primary,
-    ) +: externalActions.others.map(
+    externalActions.others.map(
       externalAction => renderExternalAction(externalAction),
     )
 
