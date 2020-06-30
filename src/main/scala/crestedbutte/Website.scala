@@ -10,6 +10,12 @@ object Website {
   def global(url: String) =
     Website(url, "Website")
 
+  def donate(url: String) =
+    Website(url, "Donate")
+
+  def giveWell(url: String) =
+    Website(url, "Rating")
+
   def onlineOrder(url: String) =
     Website(url, "Order")
 }

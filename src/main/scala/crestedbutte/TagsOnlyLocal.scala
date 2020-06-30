@@ -218,6 +218,11 @@ object TagsOnlyLocal {
             restaurantWithStatus.location.humanFriendlyName,
           ),
         ),
+        div(cls := "restaurant-call")(
+          renderExternalAction(
+            restaurantWithStatus.externalActions.primary,
+          ),
+        ),
       ),
       div(
         svgIcon("glyphicons-basic-221-chevron-down.svg"),
