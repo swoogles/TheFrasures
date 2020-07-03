@@ -269,6 +269,13 @@ object TagsOnlyLocal {
           restaurantGroup.name.humanFriendlyName,
         ),
       ),
+      div(
+        "In lieu of personal gifts, we would love for you to make a donation to one of the following charities.",
+        "We still want to thank you, so if you choose to donate, please let us know!",
+        a(href := "mailto:bill.frasure@gmail.com")(
+          "bill.frasure@gmail.com!",
+        ),
+      ),
       restaurantGroup.allRestaurants.map {
         case restaurant: RelationshipMoment => {
           TagsOnlyLocal.createBusTimeElement(restaurant)
