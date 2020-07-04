@@ -29,6 +29,7 @@ object RecommendedCharities
           ),
           Details(
             """
+            Bill:
             Malaria is one of the deadliest, most easily prevented, diseases on Earth.
             This organization provides durable, insecticide-treated mosquito nets to hang over beds of those at-risk.
             Each net costs about $2.00, lasts for 3-4 years, and protects, on average, two people.
@@ -54,6 +55,7 @@ object RecommendedCharities
           ),
           Details(
             """
+            Hali:
             Health Education is one of the most important gifts we can give.
             This organization does culture-specific mass-media (via radio!) outreach in developing countries
             to teach skills and broaden medical knowledge.
@@ -73,7 +75,9 @@ object RecommendedCharities
             ),
           ),
           Details(
-            """On a lighter, closer-to-home note, CBMT is our local community theatre.
+            """
+              Bill & Hali:
+              On a lighter, closer-to-home note, CBMT is our local community theatre.
               Hali has been performing here since 1998, and Bill has been involved since
               moving to Crested Butte 5 years ago. As everyone knows, the arts are struggling at the moment,
               as live performance is all but impossible.
