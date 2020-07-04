@@ -46,9 +46,7 @@ object TagsOnlyLocal {
         div(
           "For corrections, confusion, kudos, or anger: ",
         ),
-        Bulma.Button.basic(
-          a(href := "mailto:bill@billdingsoftware.com")("Email Me!"),
-        ),
+        a(href := "mailto:bill@billdingsoftware.com")("Email Me!"),
       ),
       if (pageMode == AppMode.Development) {
         div(
