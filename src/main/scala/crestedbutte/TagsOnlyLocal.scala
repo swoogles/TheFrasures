@@ -275,8 +275,8 @@ object TagsOnlyLocal {
         "We still want to thank you, so if you choose to donate, please share your donation with us at this address!",
       ),
       div(textAlign := "center")(
-        a(href := "mailto:bill.frasure@gmail.com")(
-          "bill.frasure@gmail.com",
+        a(href := "mailto:frasureclan@gmail.com")(
+          "frasureclan@gmail.com",
         ),
       ),
       restaurantGroup.allRestaurants.map {
