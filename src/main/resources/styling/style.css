@@ -38,6 +38,8 @@ body {
     padding-right: .5em;
     padding-top: calc(.25em - 1px);
     white-space: normal;
+    background-color: #006400;
+    color: white;
 }
 
 .light-background {
