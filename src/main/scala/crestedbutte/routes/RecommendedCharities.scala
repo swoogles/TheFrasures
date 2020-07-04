@@ -1,11 +1,9 @@
 package crestedbutte.routes
 
-import crestedbutte.time.{ClosedAllDay, Hours, HoursOfOperation}
 import crestedbutte.{
   Details,
   ExternalActionCollection,
   Name,
-  PhoneNumber,
   RelationshipMoment,
   VisitHomePage,
   Website,
@@ -30,7 +28,12 @@ object RecommendedCharities
             ),
           ),
           Details(
-            "This is one of the most effective ways to save lives.",
+            """
+            Malaria is one of the deadliest, most easily prevented, diseases on Earth.
+            This organization provides durable, insecticide-treated mosquito nets to hang over beds of those at-risk.
+            Each net costs about $2.00, lasts for 3-4 years, and protects, on average, two people.
+            Every 100-1,000 nets prevents one child death.
+            """,
           ),
         ),
         RelationshipMoment(
@@ -50,7 +53,13 @@ object RecommendedCharities
             ),
           ),
           Details(
-            "They create localized health media in developing nations.",
+            """
+            Health Education is one of the most important gifts we can give.
+            This organization does culture-specific mass-media (via radio!) outreach in developing countries
+            to teach skills and broaden medical knowledge.
+            Focuses include, but are not limited to: sanitation, disease spread, and causes of early infant mortality.
+            My family has always deemed education (and radio!) to be very important, so this cause is very close to my heart.
+            """,
           ),
         ),
         RelationshipMoment(
@@ -64,11 +73,14 @@ object RecommendedCharities
             ),
           ),
           Details(
-            """On a lighter, closer-to-home note, this is our local community theatre.
-              | Hali has been performing here since middle school, and Bill has been involved since
-              | moving to Crested Butte. They are having a really hard time surviving during
-              | all of the Covid measures.
-              |""".stripMargin,
+            """On a lighter, closer-to-home note, CBMT is our local community theatre.
+              Hali has been performing here since 1998, and Bill has been involved since
+              moving to Crested Butte 5 years ago. As everyone knows, the arts are struggling at the moment,
+              as live performance is all but impossible.
+              The 2 of us have bonded over theatre productions, and hope to do so well into the future.
+              Please consider making a gift in our name!
+
+              """.stripMargin,
           ),
         ),
       ),

@@ -269,9 +269,10 @@ object TagsOnlyLocal {
           restaurantGroup.name.humanFriendlyName,
         ),
       ),
-      div(
+      div( // TODO Description text should be a MemoryGroup field.
+        "Thank you for for your kindness towards us, and wanting to give us a gift.",
         "In lieu of personal gifts, we would love for you to make a donation to one of the following charities.",
-        "We still want to thank you, so if you choose to donate, please let us know!",
+        "We still want to thank you, so if you choose to donate, please share your donation with us at this address!",
       ),
       div(textAlign := "center")(
         a(href := "mailto:bill.frasure@gmail.com")(
