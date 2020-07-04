@@ -95,6 +95,7 @@ body {
 .restaurant-name {
     grid-area: restaurant-name;
     text-align: center;
+    font-size: 130%;
 }
 
 .restaurant-call {
