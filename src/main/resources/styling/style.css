@@ -29,6 +29,7 @@ body {
 }
 
 .button {
+    border-color:  #106449;
     font-size: 80%;
     font-weight: bold;
     height: 85%;
