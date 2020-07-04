@@ -276,7 +276,9 @@ object TagsOnlyLocal {
         In lieu of personal gifts, we would love for you to make a donation to one of the following charities.
         We still want to thank you, so if you choose to donate, please share your donation with us at this address!""",
       ),
-      div(textAlign := "center")(
+      div(textAlign := "center",
+          paddingTop := "20px",
+          paddingBottom := "20px")(
         a(href := "mailto:frasureclan@gmail.com")(
           "frasureclan@gmail.com",
         ),
