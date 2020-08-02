@@ -2,6 +2,7 @@ package crestedbutte
 
 import org.scalajs.dom.raw.MouseEvent
 import zio.ZIO
+import crestedbutte.Browser.Browser
 
 // TODO Move this into bulma library
 object ModalBehavior {
@@ -13,20 +14,20 @@ object ModalBehavior {
 
   val addModalOpenBehavior =
     ZIO
-      .environment[Browser]
+      .access[Browser](_.get)
       .map {
         browser =>
           def activateModal(
             targetName: String,
           ): Unit =
-            browser.browser
+            browser
               .querySelector(targetName)
               .foreach(
                 _.classList
                   .add("is-active"),
               )
 
-          browser.browser
+          browser
             .querySelectorAll(".open-arrival-time-modal")
             .foreach {
               modalOpenButton =>
@@ -41,13 +42,13 @@ object ModalBehavior {
 
                       clickEvent.preventDefault();
 
-                      browser.browser
+                      browser
                         .querySelector(
                           id(modalContentId),
                         )
                         .map {
                           modal =>
-                            browser.browser
+                            browser
                               .workOnFullHtmlElement(
                                 _.classList.add("is-clipped"),
                               )
@@ -73,29 +74,29 @@ object ModalBehavior {
       }
 
   def removeClippedHtml(
-    browser: Browser,
+    browser: Browser.Service,
   ) =
-    browser.browser.workOnFullHtmlElement(
+    browser.workOnFullHtmlElement(
       _.classList
         .remove("is-clipped"),
     )
 
   val addModalCloseBehavior =
     ZIO
-      .environment[Browser]
+      .access[Browser](_.get)
       .map(
         browser =>
-          browser.browser
+          browser
             .querySelectorAll(".modal-close")
             .foreach(
               _.addEventListener(
                 "click",
                 (_: MouseEvent) => {
 
-                  browser.browser.workOnFullHtmlElement(
+                  browser.workOnFullHtmlElement(
                     _.classList.remove("is-clipped"),
                   )
-                  browser.browser
+                  browser
                     .querySelector(".is-active")
                     .foreach(
                       _.classList

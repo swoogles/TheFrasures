@@ -3,16 +3,17 @@ package crestedbutte
 import org.scalajs.dom.Node
 import org.scalajs.dom.raw.{HTMLElement, MouseEvent}
 import zio.ZIO
+import crestedbutte.Browser.Browser
 
 object UnsafeCallbacks {
 
   val attachCardClickBehavior =
     ZIO
-      .environment[Browser]
+      .access[Browser](_.get)
       .map {
         // println("About to attach card behavior") // um, why does this code work if I restore this?
         browser =>
-          browser.browser
+          browser
             .querySelectorAll(".restaurant-name")
             .collect { case x: HTMLElement => x } // TODO Move this into browser interface. I want it basically everywhere.
             .foreach {
@@ -24,7 +25,7 @@ object UnsafeCallbacks {
                     toggleSiblingSection(modalOpenButton),
                   )
             }
-          browser.browser
+          browser
             .querySelectorAll(".card-header-icon")
             .collect { case x: HTMLElement => x } // TODO Move this into browser interface. I want it basically everywhere.
             .foreach {
@@ -111,17 +112,17 @@ object UnsafeCallbacks {
 
   val attachMenuBehavior =
     ZIO
-      .environment[Browser]
+      .access[Browser](_.get)
       .map(
         browser =>
-          browser.browser
+          browser
             .window()
             .document
             .addEventListener(
               "DOMContentLoaded",
               (_: Any) => {
 
-                browser.browser
+                browser
                   .querySelectorAll(".navbar-burger")
                   .foreach(
                     node =>
@@ -138,13 +139,13 @@ object UnsafeCallbacks {
 
   def menuCallbackBehavior(
     node: Node,
-    browser: Browser,
+    browser: Browser.Service,
   ) = {
     (_: MouseEvent) =>
       println("Clicked a menu item")
       // Get the target from the "data-target" attribute
       // POTENTIALLY VERY EXPENSIVE. It's jumping back to the root of the document with this search.
-      browser.browser
+      browser
         .querySelector(
           "#" + node.attributes
             .getNamedItem("data-target")

@@ -3,14 +3,19 @@ package crestedbutte
 import java.time.{Instant, OffsetDateTime}
 import java.util.concurrent.TimeUnit
 
-import com.billding.time.{ColoradoClock, FixedClock}
-import crestedbutte.dom.{BulmaBehaviorLocal, ServiceWorkerBillding}
+import com.billding.time.{ColoradoClock, FixedClock, TurboClock}
+import crestedbutte.Browser.Browser
+import crestedbutte.dom.{
+  BulmaBehaviorLocal,
+  DomManipulation,
+  ServiceWorkerBillding,
+}
 import crestedbutte.routes._
 import org.scalajs.dom.experimental.serviceworkers._
 import zio.clock._
 import zio.console.Console
 import zio.duration.Duration
-import zio.{App, Schedule, ZIO}
+import zio.{App, Schedule, ZIO, ZLayer}
 
 import scala.util.{Failure, Success}
 
@@ -18,17 +23,18 @@ object MyApp extends App {
 
   override def run(
     args: List[String],
-  ): ZIO[zio.ZEnv, Nothing, Int] = {
+  ): ZIO[zio.ZEnv, Nothing, zio.ExitCode] = {
     val myEnvironment =
-      new ColoradoClock.Live with Console.Live with BrowserLive
+      ZLayer.succeed(BrowserLive.browser) ++ Console.live ++
+      ZLayer.succeed(ColoradoClock.live)
 
-    fullApplicationLogic.provide(myEnvironment)
+    fullApplicationLogic.provideLayer(myEnvironment).exitCode
   }
 
   def loopLogic(
     pageMode: AppMode.Value,
     restaurantGroups: Seq[MemoryGroup],
-  ): ZIO[Browser with Clock with Console, Nothing, Unit] =
+  ): ZIO[Browser, Nothing, Unit] =
     for {
       serviceAreaOpt <- QueryParameters.getOptional(
         "route",
@@ -67,38 +73,42 @@ object MyApp extends App {
       s"2020-02-20T${rawTime}:00.00-07:00",
     )
 
-  val fullApplicationLogic: ZIO[Clock with Browser, Nothing, Int] =
+  val fullApplicationLogic =
     for {
+      browser    <- ZIO.access[Browser](_.get)
+      console    <- ZIO.access[Console](_.get)
+      clockParam <- ZIO.access[Clock](_.get)
       pageMode <- QueryParameters
         .getOptional("mode", AppMode.fromString)
         .map { _.getOrElse(AppMode.Production) }
       _ <- DomManipulation.createAndApplyPageStructure(
-        pageMode,
-        restaurantGroups,
+        TagsOnlyLocal
+          .overallPageLayout(pageMode, restaurantGroups)
+          .render,
       )
       _ <- UnsafeCallbacks.attachMenuBehavior
       fixedTime <- QueryParameters.getRequired("time",
                                                deserializeTimeString)
-      environmentDependencies = if (fixedTime.isDefined) { // TODO use map instead
-        new FixedClock.Fixed(
-          fixedTime.get.toString,
-        ) with Console.Live with BrowserLive
-      }
-      else
-        new ColoradoClock.Live with Console.Live with BrowserLive
-      _ <- ServiceWorkerBillding.register("./sw-opt.js")
-      loopLogicInstantiated = loopLogic(pageMode, restaurantGroups)
-        .provide(
-          // TODO Try to provide *only* a clock here.
-          environmentDependencies,
+      clock = if (fixedTime.isDefined)
+        ZLayer.succeed(
+          TurboClock.TurboClock(
+            s"2020-02-20T${fixedTime.get.toString}:00.00-07:00",
+          ),
         )
-      _ <- BulmaBehaviorLocal.addMenuBehavior(
-        loopLogicInstantiated,
+      else ZLayer.succeed(clockParam)
+      environmentDependencies = ZLayer.succeed(browser) ++ ZLayer
+        .succeed(console) ++ clock
+      loopingLogic = loopLogic(
+        pageMode,
+        restaurantGroups,
+      ).provideLayer(
+        environmentDependencies,
       )
-      _ <- loopLogicInstantiated
-        .repeat(
-          Schedule.spaced(Duration.apply(600, TimeUnit.SECONDS)),
-        )
+      _ <- BulmaBehaviorLocal.addMenuBehavior(
+        loopingLogic,
+      )
+      _ <- loopingLogic
+//        .repeat(Schedule.spaced(Duration.apply(600, TimeUnit.SECONDS)))
     } yield {
       0
     }
@@ -108,11 +118,14 @@ object MyApp extends App {
     currentlySelectedRestaurantGroup: MemoryGroup,
   ): ZIO[Browser, Nothing, Unit] =
     if (restaurantGroup == currentlySelectedRestaurantGroup) {
-      DomManipulation.updateRestaurantSectionInsideElement(
+      DomManipulation.updateContentInsideElementAndReveal(
         restaurantGroup.componentName,
-        TagsOnlyLocal.structuredSetOfUpcomingArrivals(
-          restaurantGroup,
-        ),
+        TagsOnlyLocal
+          .structuredSetOfUpcomingArrivals(
+            restaurantGroup,
+          )
+          .render,
+        ElementNames.contentName,
       )
     }
     else {
@@ -124,12 +137,12 @@ object MyApp extends App {
   def updateUpcomingArrivalsOnPage(
     selectedRestaurantGroup: MemoryGroup,
     restaurantGroups: Seq[MemoryGroup],
-  ): ZIO[Browser with Clock with Console, Nothing, Unit] =
+  ) =
     for {
       modalIsOpen <- DomMonitoring.modalIsOpen
       _ <- if (modalIsOpen) ZIO.succeed()
       else
-        ZIO.sequence(
+        ZIO.collectAll(
           restaurantGroups.map(
             (restaurantGroup: MemoryGroup) =>
               updateCurrentRestaurantInfoInCity(
