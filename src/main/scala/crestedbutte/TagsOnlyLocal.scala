@@ -1,27 +1,19 @@
 package crestedbutte
 
 import java.time.DayOfWeek
-import java.time.format.TextStyle
-import java.util.Locale
 
-import com.billding.time.BusTime
 import crestedbutte.dom.Bulma
 import crestedbutte.routes.MemoryGroup
-import crestedbutte.time.{
-  ClosedForTheDay,
-  DailyHours,
-  DailyInfo,
-  HoursOfOperation,
-}
 import org.scalajs.dom.html.{Anchor, Div}
 import scalatags.JsDom
-import scalatags.JsDom.TypedTag
 
 object TagsOnlyLocal {
   import scalatags.JsDom.all._
 
-  def overallPageLayout(pageMode: AppMode.Value,
-                        restaurantGroups: Seq[MemoryGroup]) =
+  def overallPageLayout(
+    pageMode: AppMode.Value,
+    restaurantGroups: Seq[MemoryGroup],
+  ) =
     div(id := "container")(
       // Restore once other non-charity sections are added
 //      Bulma.menu(
@@ -52,10 +44,13 @@ object TagsOnlyLocal {
         div(
           // Dev stuff here.
         )
-      } else div(),
+      }
+      else div(),
     )
 
-  def busScheduleDiv(containerName: String) =
+  def busScheduleDiv(
+    containerName: String,
+  ) =
     div(cls := ElementNames.BoxClass, id := containerName)(
       div(cls := "timezone"),
       div(id := ElementNames.contentName),
@@ -82,7 +77,6 @@ object TagsOnlyLocal {
       ),
     )
 
-  //  <a href="tel:123-456-7890">123-456-7890</a>
   def phoneButton(
     safeRideRecommendation: PhoneNumber,
   ): JsDom.TypedTag[Div] =
@@ -113,42 +107,9 @@ object TagsOnlyLocal {
       phoneNumber.name,
     )
 
-  def renderDeliverySchedule(
-    hoursOfOperationOpt: Option[HoursOfOperation],
-  ) =
-    renderHoursOfOperation(hoursOfOperationOpt, "Delivery")
-
-  def renderPickupSchedule(
-    hoursOfOperationOpt: Option[HoursOfOperation],
-  ) =
-    renderHoursOfOperation(hoursOfOperationOpt, "Pickup")
-
-  def renderHoursOfOperation(
-    hoursOfOperationOpt: Option[HoursOfOperation],
-    scheduleHeader: String,
-  ) =
-    div(cls := "hours-of-operation")(
-      div(cls := "hours-header")(
-        div(cls := "hours-header-top")(scheduleHeader),
-        div(cls := "hours-header-bottom")("Schedule"),
-      ),
-      hoursOfOperationOpt match {
-        case Some(hoursOfOperation) =>
-          div(
-            renderDailySchedule(hoursOfOperation.sunday),
-            renderDailySchedule(hoursOfOperation.monday),
-            renderDailySchedule(hoursOfOperation.tuesday),
-            renderDailySchedule(hoursOfOperation.wednesday),
-            renderDailySchedule(hoursOfOperation.thursday),
-            renderDailySchedule(hoursOfOperation.friday),
-            renderDailySchedule(hoursOfOperation.saturday),
-          )
-        case None =>
-          div(cls := "service-unavailable")("Not available.")
-      },
-    )
-
-  def renderDayName(dayOfWeek: DayOfWeek): String =
+  def renderDayName(
+    dayOfWeek: DayOfWeek,
+  ): String =
     // This doesn't work for some lame reason.
     // .getDisplayName(TextStyle.SHORT_STANDALONE, Locale.US),
     dayOfWeek match {
@@ -161,45 +122,6 @@ object TagsOnlyLocal {
       case DayOfWeek.SATURDAY  => "Sat"
     }
 
-  def renderDailyhours(dailyHours: DailyHours) =
-    div(cls := "daily-hours")(
-      div(cls := "day")(
-        div(cls := "day-name")(
-          renderDayName(dailyHours.dayOfWeek),
-        ),
-      ),
-      div(cls := "hours")(
-        dailyHours.hoursSegment.map(
-          hoursSegment =>
-            div(
-              hoursSegment.open.toDumbAmericanString + "-" +
-              hoursSegment.close.toDumbAmericanString,
-            ),
-        ),
-      ),
-    )
-
-  def renderDailySchedule(
-    dailySchedule: DailyInfo,
-  ) =
-    dailySchedule match {
-      case closedForTheDay: ClosedForTheDay =>
-        renderClosedForTheDay(closedForTheDay)
-      case dailyHours: DailyHours => renderDailyhours(dailyHours)
-    }
-
-  def renderClosedForTheDay(closedForTheDay: ClosedForTheDay) =
-    div(cls := "daily-hours")(
-      div(cls := "day")(
-        div(cls := "day-name")(
-          renderDayName(closedForTheDay.dayOfWeek),
-        ),
-      ),
-      div(cls := "hours")(
-        " *CLOSED* ",
-      ),
-    )
-
   def createBusTimeElement(
     restaurantWithStatus: RelationshipMoment,
   ): JsDom.TypedTag[Div] = {
@@ -210,9 +132,6 @@ object TagsOnlyLocal {
     Bulma.collapsedCardWithHeader(
       div(cls := "restaurant-header")(
         div(cls := "restaurant-name")(
-//          if (carryOutStatus == Open || deliveryStatus == Open)
-//            div(location.name + "Open now!")
-//          else
           div(
             restaurantWithStatus.location.humanFriendlyName,
           ),
@@ -235,20 +154,17 @@ object TagsOnlyLocal {
     )
   }
 
-  def activateModal(targetName: String): Unit =
+  def activateModal(
+    targetName: String,
+  ): Unit =
     org.scalajs.dom.document.body
       .querySelector(targetName)
       .classList
       .add("is-active")
 
-  def modalContentElementNameTyped(location: Name, routeName: Name) =
-    data("schedule-modal") := modalContentElementName(location,
-                                                      routeName)
-
-  def modalContentElementName(location: Name, routeName: Name) =
-    "modal_content_" + routeName.elementName + "_" + location.elementName
-
-  def renderExternalAction(externalAction: ExternalAction) =
+  def renderExternalAction(
+    externalAction: ExternalAction,
+  ) =
     externalAction match {
       case VisitHomePage(website) =>
         renderWebsiteLink(website)
@@ -282,9 +198,8 @@ object TagsOnlyLocal {
         ),
       ),
       restaurantGroup.allRestaurants.map {
-        case restaurant: RelationshipMoment => {
+        restaurant: RelationshipMoment =>
           TagsOnlyLocal.createBusTimeElement(restaurant)
-        }
       },
     )
 
@@ -295,18 +210,9 @@ object TagsOnlyLocal {
       externalAction => renderExternalAction(externalAction),
     )
 
-  def svgIconForAlarm(name: String,
-                      classes: String,
-                      busTime: BusTime) =
-    img(
-      cls := "glyphicon " + classes,
-      src := s"/glyphicons/svg/individual-svg/$name",
-      alt := "Thanks for riding the bus!",
-      data("lossless-value") := busTime.toString,
-      verticalAlign := "middle",
-    )
-
-  def svgIcon(name: String) =
+  def svgIcon(
+    name: String,
+  ) =
     img(
       cls := "glyphicon",
       src := s"/glyphicons/svg/individual-svg/$name",

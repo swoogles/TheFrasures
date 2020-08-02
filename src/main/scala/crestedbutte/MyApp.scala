@@ -48,10 +48,8 @@ object MyApp extends App {
           "selectedRestaurantGroup: " + selectedRestaurantGroup.name.humanFriendlyName,
         ),
       )
-      now <- TimeCalculations.now
       _ <- updateUpcomingArrivalsOnPage(selectedRestaurantGroup,
-                                        restaurantGroups,
-                                        now)
+                                        restaurantGroups)
       _ <- ModalBehavior.addModalOpenBehavior
       _ <- ModalBehavior.addModalCloseBehavior
       _ <- UnsafeCallbacks.attachCardClickBehavior
@@ -62,7 +60,9 @@ object MyApp extends App {
       RecommendedCharities,
     )
 
-  def deserializeTimeString(rawTime: String): OffsetDateTime =
+  def deserializeTimeString(
+    rawTime: String,
+  ): OffsetDateTime =
     OffsetDateTime.parse(
       s"2020-02-20T${rawTime}:00.00-07:00",
     )
@@ -83,7 +83,8 @@ object MyApp extends App {
         new FixedClock.Fixed(
           fixedTime.get.toString,
         ) with Console.Live with BrowserLive
-      } else
+      }
+      else
         new ColoradoClock.Live with Console.Live with BrowserLive
       _ <- ServiceWorkerBillding.register("./sw-opt.js")
       loopLogicInstantiated = loopLogic(pageMode, restaurantGroups)
@@ -105,8 +106,7 @@ object MyApp extends App {
   def updateCurrentRestaurantInfoInCity(
     restaurantGroup: MemoryGroup,
     currentlySelectedRestaurantGroup: MemoryGroup,
-    now: Instant,
-  ) =
+  ): ZIO[Browser, Nothing, Unit] =
     if (restaurantGroup == currentlySelectedRestaurantGroup) {
       DomManipulation.updateRestaurantSectionInsideElement(
         restaurantGroup.componentName,
@@ -114,7 +114,8 @@ object MyApp extends App {
           restaurantGroup,
         ),
       )
-    } else {
+    }
+    else {
       DomManipulation.hideElement(
         restaurantGroup.componentName,
       )
@@ -123,7 +124,6 @@ object MyApp extends App {
   def updateUpcomingArrivalsOnPage(
     selectedRestaurantGroup: MemoryGroup,
     restaurantGroups: Seq[MemoryGroup],
-    now: Instant,
   ): ZIO[Browser with Clock with Console, Nothing, Unit] =
     for {
       modalIsOpen <- DomMonitoring.modalIsOpen
@@ -131,11 +131,11 @@ object MyApp extends App {
       else
         ZIO.sequence(
           restaurantGroups.map(
-            updateCurrentRestaurantInfoInCity(
-              _,
-              selectedRestaurantGroup,
-              now: Instant,
-            ),
+            (restaurantGroup: MemoryGroup) =>
+              updateCurrentRestaurantInfoInCity(
+                restaurantGroup,
+                selectedRestaurantGroup,
+              ),
           ),
         )
     } yield ()

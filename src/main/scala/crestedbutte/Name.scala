@@ -1,6 +1,7 @@
 package crestedbutte
 
-case class Name(humanFriendlyName: String) {
+case class Name(
+  humanFriendlyName: String) {
 
   val elementName: String =
     humanFriendlyName
@@ -10,6 +11,8 @@ case class Name(humanFriendlyName: String) {
       )
       .mkString
 
-  def elementNameMatches(elementName: String) =
+  def elementNameMatches(
+    elementName: String,
+  ) =
     this.elementName == elementName
 }

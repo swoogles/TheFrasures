@@ -1,21 +1,33 @@
 package crestedbutte
 
-case class Website(url: String, name: String)
+case class Website(
+  url: String,
+  name: String)
 
 object Website {
 
-  def facebookPage(url: String) =
+  def facebookPage(
+    url: String,
+  ) =
     Website(url, "Facebook")
 
-  def global(url: String) =
+  def global(
+    url: String,
+  ) =
     Website(url, "Website")
 
-  def donate(url: String) =
+  def donate(
+    url: String,
+  ) =
     Website(url, "Donate")
 
-  def giveWell(url: String) =
+  def giveWell(
+    url: String,
+  ) =
     Website(url, "Rating")
 
-  def onlineOrder(url: String) =
+  def onlineOrder(
+    url: String,
+  ) =
     Website(url, "Order")
 }

@@ -15,23 +15,25 @@ object UnsafeCallbacks {
           browser.browser
             .querySelectorAll(".restaurant-name")
             .collect { case x: HTMLElement => x } // TODO Move this into browser interface. I want it basically everywhere.
-            .foreach { modalOpenButton: HTMLElement =>
-              println("Found a card. Attaching click behavior.")
-              modalOpenButton
-                .addEventListener(
-                  "click",
-                  toggleSiblingSection(modalOpenButton),
-                )
+            .foreach {
+              modalOpenButton: HTMLElement =>
+                println("Found a card. Attaching click behavior.")
+                modalOpenButton
+                  .addEventListener(
+                    "click",
+                    toggleSiblingSection(modalOpenButton),
+                  )
             }
           browser.browser
             .querySelectorAll(".card-header-icon")
             .collect { case x: HTMLElement => x } // TODO Move this into browser interface. I want it basically everywhere.
-            .foreach { modalOpenButton: HTMLElement =>
-              modalOpenButton
-                .addEventListener(
-                  "click",
-                  toggleSiblingSection2LevelsUp(modalOpenButton),
-                )
+            .foreach {
+              modalOpenButton: HTMLElement =>
+                modalOpenButton
+                  .addEventListener(
+                    "click",
+                    toggleSiblingSection2LevelsUp(modalOpenButton),
+                  )
             }
       }
 
@@ -43,7 +45,8 @@ object UnsafeCallbacks {
         htmlElement.parentElement.parentElement.parentElement.parentElement
       if (parentCard.querySelectorAll(".is-hidden").length > 0) {
         expandSection(parentCard)
-      } else {
+      }
+      else {
         collapseSection(parentCard)
       }
     }
@@ -56,21 +59,27 @@ object UnsafeCallbacks {
         htmlElement.parentElement.parentElement
       if (parentCard.querySelectorAll(".is-hidden").length > 0) {
         expandSection(parentCard)
-      } else {
+      }
+      else {
         collapseSection(parentCard)
       }
     }
 
-  def toggleSection(htmlElement: HTMLElement): MouseEvent => Unit =
+  def toggleSection(
+    htmlElement: HTMLElement,
+  ): MouseEvent => Unit =
     (clickEvent: MouseEvent) => {
       if (htmlElement.querySelectorAll(".is-hidden").length > 0) {
         expandSection(htmlElement)
-      } else {
+      }
+      else {
         collapseSection(htmlElement)
       }
     }
 
-  def expandSection(htmlElement: HTMLElement): Unit = {
+  def expandSection(
+    htmlElement: HTMLElement,
+  ): Unit = {
     println("clicked a card.")
 
     htmlElement
@@ -85,7 +94,9 @@ object UnsafeCallbacks {
 //      htmlElement.scrollIntoView(true)
   }
 
-  def collapseSection(htmlElement: HTMLElement): Unit = {
+  def collapseSection(
+    htmlElement: HTMLElement,
+  ): Unit = {
     htmlElement
       .querySelector(".card-content")
       .classList
@@ -125,7 +136,10 @@ object UnsafeCallbacks {
             ),
       )
 
-  def menuCallbackBehavior(node: Node, browser: Browser) = {
+  def menuCallbackBehavior(
+    node: Node,
+    browser: Browser,
+  ) = {
     (_: MouseEvent) =>
       println("Clicked a menu item")
       // Get the target from the "data-target" attribute

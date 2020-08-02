@@ -12,7 +12,9 @@ case class HoursOfOperation(
   saturday: DailyInfo,
 ) {
 
-  def dailyInfoFor(dayOfWeek: DayOfWeek): DailyInfo =
+  def dailyInfoFor(
+    dayOfWeek: DayOfWeek,
+  ): DailyInfo =
     if (dayOfWeek == DayOfWeek.SUNDAY)
       sunday
     else if (dayOfWeek == DayOfWeek.MONDAY)
@@ -35,7 +37,10 @@ case class HoursOfOperation(
 
 object HoursOfOperation {
 
-  def everyDay(open: String, close: String): HoursOfOperation =
+  def everyDay(
+    open: String,
+    close: String,
+  ): HoursOfOperation =
     HoursOfOperation(
       sunday = DailyHours(open, close, DayOfWeek.SUNDAY),
       monday = DailyHours(open, close, DayOfWeek.MONDAY),
@@ -46,10 +51,12 @@ object HoursOfOperation {
       saturday = DailyHours(open, close, DayOfWeek.SATURDAY),
     )
 
-  def everyDay(open: String,
-               close: String,
-               open2: String,
-               close2: String): HoursOfOperation =
+  def everyDay(
+    open: String,
+    close: String,
+    open2: String,
+    close2: String,
+  ): HoursOfOperation =
     HoursOfOperation(
       sunday =
         DailyHours(open, close, open2, close2, DayOfWeek.SUNDAY),

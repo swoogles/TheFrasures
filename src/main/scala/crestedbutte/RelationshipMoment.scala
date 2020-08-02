@@ -8,4 +8,5 @@ case class RelationshipMoment(
 
 object RelationshipMoment {}
 
-case class Details(description: String)
+case class Details(
+  description: String)
